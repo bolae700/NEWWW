@@ -1,33 +1,43 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MICRO RETRO PLAYER</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>RETRO PLAY - Retro Music Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2a 100%);
-            color: #e0e0ff;
-            min-height: 100vh;
+            background: linear-gradient(135deg, #0a1a2a, #0a2a2a);
+            color: #e0f7fa;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Share Tech Mono', monospace;
-            padding: 10px;
+            min-height: 100vh;
+            padding: 20px;
             overflow: hidden;
-            position: relative;
         }
 
-        /* Enhanced Background with More Visibility */
-        body::before {
-            content: "";
+        .full-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 150, 200, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 200, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 100, 150, 0.1) 0%, transparent 50%);
+            z-index: -2;
+        }
+
+        .background-image {
             position: fixed;
             top: 0;
             left: 0;
@@ -36,1120 +46,817 @@
             background-image: url('https://xatimg.com/image/MIgzs1WSn1yd.png');
             background-size: cover;
             background-position: center;
-            opacity: 0.25;
-            z-index: -2;
-        }
-
-        /* Simplified Glitch Effect */
-        .glitch-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            opacity: 0.4;
-        }
-
-        .glitch-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2a 100%);
-            mix-blend-mode: overlay;
-        }
-
-        .glitch-layer:nth-child(1) {
-            animation: glitch-1 10s infinite linear alternate-reverse;
-        }
-
-        .glitch-layer:nth-child(2) {
-            animation: glitch-2 15s infinite linear alternate-reverse;
-        }
-
-        @keyframes glitch-1 {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
-        }
-
-        @keyframes glitch-2 {
-            0% { transform: translate(0); }
-            25% { transform: translate(1px, -1px); }
-            50% { transform: translate(-1px, 1px); }
-            75% { transform: translate(1px, 1px); }
-            100% { transform: translate(0); }
-        }
-
-        /* Scanlines Effect */
-        .scanlines {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, 
-                rgba(100, 150, 255, 0.03) 50%, 
-                transparent 50%);
-            background-size: 100% 3px;
-            z-index: 1;
-            pointer-events: none;
             opacity: 0.3;
+            filter: sepia(0.3) hue-rotate(180deg) contrast(1.2) brightness(0.7);
+            z-index: -1;
         }
 
-        /* Micro Player Container */
         .player-container {
-            display: flex;
-            gap: 15px;
-            align-items: flex-start;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* Micro Player - 16:9 Aspect Ratio */
-        .player {
-            width: 320px; /* 16:9 ratio for 320x180 */
-            height: 180px;
-            background: rgba(10, 10, 20, 0.9);
-            border: 1px solid #4a6bff;
-            box-shadow: 
-                0 0 8px rgba(74, 107, 255, 0.4),
-                0 0 15px rgba(74, 107, 255, 0.2),
-                inset 0 0 10px rgba(74, 107, 255, 0.1);
-            padding: 12px;
-            position: relative;
+            width: 400px;
+            background: rgba(10, 30, 40, 0.85);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 
+                        0 0 0 1px rgba(0, 200, 255, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
             overflow: hidden;
-            backdrop-filter: blur(3px);
-            border-radius: 8px;
-        }
-
-        .player::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                linear-gradient(45deg, transparent 49%, rgba(74, 107, 255, 0.03) 50%, transparent 51%);
-            background-size: 4px 4px;
-            pointer-events: none;
+            backdrop-filter: blur(10px);
+            position: relative;
             z-index: 1;
         }
 
-        .lyrics-panel {
-            width: 320px;
-            height: 180px;
-            background: rgba(10, 10, 20, 0.9);
-            border: 1px solid #4a6bff;
-            box-shadow: 
-                0 0 8px rgba(74, 107, 255, 0.4),
-                0 0 15px rgba(74, 107, 255, 0.2),
-                inset 0 0 10px rgba(74, 107, 255, 0.1);
-            padding: 12px;
+        .player-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0, 200, 255, 0.2);
+            background: rgba(5, 20, 30, 0.7);
+        }
+
+        .profile-container {
             position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(3px);
-            border-radius: 8px;
-            display: none;
-        }
-
-        .lyrics-panel::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                linear-gradient(45deg, transparent 49%, rgba(74, 107, 255, 0.03) 50%, transparent 51%);
-            background-size: 4px 4px;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* Compact Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 2;
-            border-bottom: 1px solid #4a6bff;
-            padding-bottom: 8px;
-        }
-
-        .logo-section {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .logo {
-            font-family: 'Orbitron', monospace;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: #4a6bff;
-            margin-bottom: 2px;
-        }
-
-        .subtitle {
-            font-size: 8px;
-            color: #8a9bff;
-            letter-spacing: 1px;
-            font-weight: 300;
-        }
-
-        .datetime {
-            text-align: left;
-        }
-
-        .time {
-            font-family: 'Orbitron', monospace;
-            font-size: 10px;
-            font-weight: 700;
-            color: #4a6bff;
-            margin-bottom: 1px;
-        }
-
-        .date {
-            font-size: 8px;
-            color: #8a9bff;
-            font-weight: 300;
-        }
-
-        /* Profile Section - Compact */
-        .profile-section {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 2;
-            gap: 8px;
-        }
-
-        .profile-image {
-            width: 40px;
-            height: 40px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            border: 1px solid #4a6bff;
-            box-shadow: 0 0 5px rgba(74, 107, 255, 0.4);
             overflow: hidden;
-            position: relative;
+            margin: 0 auto 15px;
+            border: 2px solid rgba(0, 200, 255, 0.5);
+            box-shadow: 0 0 20px rgba(0, 200, 255, 0.3);
         }
 
-        .profile-image img {
+        .profile-pic {
             width: 100%;
             height: 100%;
             object-fit: cover;
             opacity: 0.9;
         }
 
-        .profile-info {
-            flex: 1;
-        }
-
-        .profile-name {
-            font-size: 11px;
-            font-weight: 700;
-            color: #4a6bff;
-            margin-bottom: 2px;
-        }
-
-        .profile-status {
-            font-size: 8px;
-            color: #8a9bff;
-            letter-spacing: 0.5px;
-        }
-
-        /* Minimal Visualizer */
-        .visualizer-container {
-            position: relative;
-            width: 100%;
-            height: 40px;
-            margin-bottom: 10px;
-            background: rgba(15, 15, 30, 0.5);
-            border: 1px solid #4a6bff;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        #waveCanvas {
+        .visualizer {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            display: block;
+            border-radius: 50%;
+            opacity: 0.7;
         }
 
         .track-info {
-            text-align: center;
-            margin-bottom: 8px;
-            position: relative;
-            z-index: 2;
+            margin-bottom: 10px;
         }
 
         .track-title {
-            font-size: 11px;
-            font-weight: 700;
-            color: #4a6bff;
-            margin-bottom: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            letter-spacing: 0.5px;
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #00e5ff;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
         }
 
         .track-artist {
-            font-size: 9px;
-            color: #8a9bff;
-            letter-spacing: 0.5px;
-            font-weight: 300;
+            font-size: 14px;
+            color: #80deea;
         }
 
-        /* Progress Bar */
+        .time-date {
+            font-size: 12px;
+            color: #b2ebf2;
+            margin-top: 10px;
+        }
+
+        .player-body {
+            padding: 20px;
+        }
+
         .progress-container {
-            margin-bottom: 8px;
-            position: relative;
-            z-index: 2;
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 100, 150, 0.3);
+            border-radius: 3px;
+            margin: 15px 0 10px;
+            cursor: pointer;
+            overflow: hidden;
         }
 
         .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(20, 20, 40, 0.5);
-            overflow: hidden;
-            border: 1px solid #4a6bff;
-            border-radius: 2px;
+            height: 100%;
+            width: 30%;
+            background: linear-gradient(90deg, #00bcd4, #00e5ff);
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
             position: relative;
         }
 
-        .progress {
-            height: 100%;
-            background: linear-gradient(90deg, #4a6bff, #6a8bff);
-            width: 0%;
-            transition: width 0.1s;
-            border-radius: 1px;
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            background: #00e5ff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.8);
+            transform: translate(50%, -2px);
         }
 
         .time-display {
             display: flex;
             justify-content: space-between;
-            font-size: 8px;
-            color: #8a9bff;
-            margin-top: 4px;
-            font-weight: 300;
-            letter-spacing: 0.5px;
+            font-size: 12px;
+            color: #80deea;
+            margin-bottom: 20px;
         }
 
-        /* Compact Controls */
         .controls {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            position: relative;
-            z-index: 2;
-            gap: 6px;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
         }
 
         .control-btn {
-            padding: 5px 8px;
-            background: rgba(15, 15, 30, 0.7);
-            border: 1px solid #4a6bff;
-            color: #4a6bff;
+            background: rgba(0, 150, 200, 0.2);
+            border: none;
+            color: #00e5ff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 10px;
             cursor: pointer;
-            font-size: 10px;
-            font-weight: 400;
-            transition: all 0.2s;
-            letter-spacing: 0.5px;
-            font-family: 'Share Tech Mono', monospace;
-            position: relative;
-            overflow: hidden;
-            flex: 1;
-            text-align: center;
-            border-radius: 3px;
-        }
-
-        .control-btn:active {
-            background: rgba(74, 107, 255, 0.2);
-            transform: scale(0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 200, 255, 0.2);
+            font-size: 14px;
         }
 
         .control-btn:hover {
-            background: rgba(74, 107, 255, 0.1);
+            background: rgba(0, 150, 200, 0.4);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(0, 200, 255, 0.4);
         }
 
-        .play-pause {
-            flex: 2;
-            font-weight: 700;
-            background: rgba(74, 107, 255, 0.1);
-            font-size: 11px;
+        .play-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 150, 200, 0.3);
+            font-size: 16px;
         }
 
-        /* Micro Playlist */
-        .playlist {
-            max-height: 60px;
-            overflow-y: auto;
-            border: 1px solid #4a6bff;
-            padding: 6px;
-            background: rgba(15, 15, 30, 0.5);
-            position: relative;
-            z-index: 2;
-            border-radius: 3px;
-        }
-
-        .track-item {
-            padding: 4px 6px;
-            border-bottom: 1px solid rgba(74, 107, 255, 0.2);
-            cursor: pointer;
-            transition: all 0.2s;
+        .volume-container {
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-bottom: 3px;
-            font-size: 9px;
-            border-radius: 2px;
+            margin: 15px 0;
         }
 
-        .track-item:hover {
-            background: rgba(74, 107, 255, 0.1);
+        .volume-icon {
+            color: #00e5ff;
+            margin-right: 10px;
+            font-size: 14px;
         }
 
-        .track-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        .track-number {
-            width: 16px;
-            height: 16px;
-            background: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 8px;
-            font-weight: 700;
-            color: #4a6bff;
-            border: 1px solid #4a6bff;
-            font-family: 'Orbitron', monospace;
-            border-radius: 50%;
-        }
-
-        .track-name {
+        .volume-slider {
             flex: 1;
-            color: #8a9bff;
-            font-weight: 400;
-            letter-spacing: 0.3px;
-        }
-
-        .track-duration {
-            font-size: 8px;
-            color: #4a6bff;
-            font-weight: 300;
-            font-family: 'Orbitron', monospace;
-        }
-
-        .active-track {
-            background: rgba(74, 107, 255, 0.15);
-            border: 1px solid #4a6bff;
-        }
-
-        .active-track .track-number {
-            background: #4a6bff;
-            color: #0a0a1a;
-        }
-
-        .active-track .track-name {
-            color: #4a6bff;
-            font-weight: 700;
-        }
-
-        ::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(15, 15, 30, 0.5);
-            border-radius: 1px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #4a6bff;
-            border-radius: 1px;
-        }
-
-        .footer {
-            text-align: center;
-            font-size: 8px;
-            color: #8a9bff;
-            margin-top: 8px;
-            position: relative;
-            letter-spacing: 0.5px;
-            font-weight: 300;
-            border-top: 1px solid #4a6bff;
-            padding-top: 6px;
-            z-index: 2;
-        }
-
-        /* Lyrics Panel Styles */
-        .lyrics-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 2;
-            border-bottom: 1px solid #4a6bff;
-            padding-bottom: 8px;
-        }
-
-        .lyrics-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: #4a6bff;
-        }
-
-        .close-lyrics {
-            background: rgba(15, 15, 30, 0.7);
-            border: 1px solid #4a6bff;
-            color: #4a6bff;
-            font-size: 10px;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            border-radius: 50%;
-        }
-
-        .close-lyrics:hover {
-            background: rgba(74, 107, 255, 0.1);
-        }
-
-        .lyrics-content {
-            height: 120px;
-            overflow-y: auto;
-            padding: 6px;
-            font-size: 9px;
-            line-height: 1.5;
-            text-align: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .lyrics-line {
-            margin-bottom: 8px;
-            color: #8a9bff;
-            transition: all 0.3s;
-            padding: 4px;
+            height: 4px;
+            background: rgba(0, 100, 150, 0.3);
             border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
         }
 
-        .lyrics-line.active {
-            color: #4a6bff;
-            font-weight: 700;
-            background: rgba(74, 107, 255, 0.1);
-        }
-
-        .show-lyrics-btn {
-            width: 100%;
-            padding: 6px;
-            background: rgba(15, 15, 30, 0.7);
-            border: 1px solid #4a6bff;
-            color: #4a6bff;
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00e5ff;
             cursor: pointer;
-            font-size: 9px;
-            font-weight: 400;
-            transition: all 0.2s;
-            letter-spacing: 0.5px;
-            font-family: 'Share Tech Mono', monospace;
-            margin-top: 8px;
-            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
         }
 
-        .show-lyrics-btn:hover {
-            background: rgba(74, 107, 255, 0.1);
+        .playlist {
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 15px;
+            border-radius: 10px;
+            background: rgba(5, 20, 30, 0.5);
+            padding: 10px;
         }
 
-        /* VHS Effect - Subtle */
-        .vhs-effect {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.03;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(100, 150, 255, 0.1) 2px,
-                rgba(100, 150, 255, 0.1) 4px
-            );
-            animation: vhs-scroll 30s linear infinite;
+        .playlist::-webkit-scrollbar {
+            width: 5px;
         }
 
-        @keyframes vhs-scroll {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(100%); }
+        .playlist::-webkit-scrollbar-thumb {
+            background: rgba(0, 150, 200, 0.5);
+            border-radius: 5px;
+        }
+
+        .playlist-item {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            background: rgba(0, 100, 150, 0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 2px solid transparent;
+            font-size: 12px;
+        }
+
+        .playlist-item:hover {
+            background: rgba(0, 150, 200, 0.3);
+            border-left: 2px solid #00bcd4;
+        }
+
+        .playlist-item.active {
+            background: rgba(0, 150, 200, 0.4);
+            border-left: 2px solid #00e5ff;
+            color: #00e5ff;
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.3);
+        }
+
+        .player-footer {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(0, 200, 255, 0.2);
+            text-align: center;
+            background: rgba(5, 20, 30, 0.7);
+        }
+
+        .youtube-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+
+        .youtube-btn i {
+            margin-right: 5px;
+        }
+
+        .youtube-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+
+        .audio-status {
+            text-align: center;
+            font-size: 11px;
+            color: #ff5252;
+            margin-top: 5px;
+            height: 15px;
+        }
+
+        .player-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #00e5ff;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .visualizer-bars {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 40px;
+            margin: 15px 0;
+        }
+
+        .bar {
+            width: 4px;
+            margin: 0 2px;
+            background: #00e5ff;
+            border-radius: 2px;
+            transition: height 0.2s ease;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.4; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .glow {
+            text-shadow: 0 0 5px rgba(0, 229, 255, 0.7);
         }
     </style>
 </head>
 <body>
-    <!-- Glitch Effect -->
-    <div class="glitch-container">
-        <div class="glitch-layer"></div>
-        <div class="glitch-layer"></div>
-    </div>
+    <div class="full-background"></div>
+    <div class="background-image"></div>
     
-    <!-- Scanlines Effect -->
-    <div class="scanlines"></div>
-    
-    <!-- VHS Effect -->
-    <div class="vhs-effect"></div>
-
     <div class="player-container">
-        <div class="player">
-            <div class="header">
-                <div class="logo-section">
-                    <div class="logo">MICRO RETRO</div>
-                    <div class="subtitle">MUSIC PLAYER</div>
-                </div>
-                <div class="datetime">
-                    <div class="time" id="currentTime">00:00:00</div>
-                    <div class="date" id="currentDate">Loading...</div>
-                </div>
+        <div class="player-header">
+            <div class="profile-container">
+                <img src="https://xatimg.com/image/MhdPKr3UzfLM.png" alt="Profile" class="profile-pic">
+                <canvas class="visualizer" id="visualizer"></canvas>
             </div>
-
-            <div class="profile-section">
-                <div class="profile-image">
-                    <img src="https://xatimg.com/image/MhdPKr3UzfLM.png" alt="Profile">
-                </div>
-                <div class="profile-info">
-                    <div class="profile-name">CYAN BEATS</div>
-                    <div class="profile-status">ONLINE | RETRO MODE</div>
-                </div>
-            </div>
-
-            <div class="visualizer-container">
-                <canvas id="waveCanvas"></canvas>
-            </div>
-
+            
+            <h1 class="player-title">RETRO PLAY</h1>
+            
             <div class="track-info">
-                <div class="track-title" id="trackTitle">SELECT TRACK</div>
-                <div class="track-artist" id="trackArtist">CLICK ON PLAYLIST</div>
+                <h2 class="track-title" id="track-title">Select a song</h2>
+                <p class="track-artist" id="track-artist">From the playlist</p>
             </div>
-
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress" id="progress"></div>
-                </div>
-                <div class="time-display">
-                    <span id="currentTrackTime">0:00</span>
-                    <span id="trackDuration">0:00</span>
-                </div>
+            
+            <div class="time-date" id="time-date"></div>
+        </div>
+        
+        <div class="player-body">
+            <div class="progress-container" id="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
             </div>
-
+            
+            <div class="time-display">
+                <span id="current-time">0:00</span>
+                <span id="total-time">0:00</span>
+            </div>
+            
+            <div class="visualizer-bars" id="visualizer-bars">
+                <!-- Visualizer bars will be generated by JavaScript -->
+            </div>
+            
             <div class="controls">
-                <button class="control-btn" id="prevBtn">⏮</button>
-                <button class="control-btn play-pause" id="playPauseBtn">▶</button>
-                <button class="control-btn" id="nextBtn">⏭</button>
+                <button class="control-btn" id="shuffle-btn">
+                    <i class="fas fa-random"></i>
+                </button>
+                <button class="control-btn" id="prev-btn">
+                    <i class="fas fa-step-backward"></i>
+                </button>
+                <button class="control-btn play-btn" id="play-btn">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button class="control-btn" id="next-btn">
+                    <i class="fas fa-step-forward"></i>
+                </button>
+                <button class="control-btn" id="repeat-btn">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+            
+            <div class="volume-container">
+                <div class="volume-icon">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+                <input type="range" min="0" max="100" value="80" class="volume-slider" id="volume-slider">
             </div>
 
+            <div class="audio-status" id="audio-status">Click play to start</div>
+            
             <div class="playlist" id="playlist">
-                <!-- Tracks will be added here by JavaScript -->
-            </div>
-
-            <button class="show-lyrics-btn" id="showLyricsBtn">LYRICS</button>
-
-            <div class="footer">
-                SYSTEM ONLINE | MICRO MODE | V2.0
+                <!-- Playlist will be added dynamically -->
             </div>
         </div>
-
-        <div class="lyrics-panel" id="lyricsPanel">
-            <div class="lyrics-header">
-                <div class="lyrics-title">LYRICS</div>
-                <button class="close-lyrics" id="closeLyricsBtn">X</button>
-            </div>
-            <div class="lyrics-content" id="lyricsContent">
-                <!-- Lyrics will be displayed here -->
-            </div>
+        
+        <div class="player-footer">
+            <a href="https://youtube.com/@SoundSurge3" target="_blank" class="youtube-btn">
+                <i class="fab fa-youtube"></i> Subscribe to my channel
+            </a>
         </div>
     </div>
 
     <script>
-        // Date and Time
-        function updateDateTime() {
-            const now = new Date();
-            
-            // Format time
-            const timeString = now.toLocaleTimeString('en-US', { 
-                hour12: false,
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
-            
-            // Format date
-            const dateString = now.toLocaleDateString('en-US', {
-                weekday: 'short',
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            });
-            
-            document.getElementById('currentTime').textContent = timeString;
-            document.getElementById('currentDate').textContent = dateString;
-        }
-
-        // Update date/time every second
-        setInterval(updateDateTime, 1000);
-        updateDateTime();
-
-        // Music tracks with direct URLs and lyrics
+        // Music data
         const tracks = [
-            { 
-                id: 1, 
-                name: "Asphalt Heartbeat", 
-                url: "https://audio.jukehost.co.uk/g1mnUVIICxoL3IQgWT1D1eBE3PebQz2z", 
-                duration: "5:12",
-                lyrics: [
-                    "Lights on. GO.",
-                    "",
-                    "Red line flash",
-                    "Concrete dash",
-                    "No time waste",
-                    "Join the chase",
-                    "City bright",
-                    "Endless night",
-                    "Feel the pace",
-                    "In this race.",
-                    "",
-                    "The beat gets louder, feel the ground shake",
-                    "Push it faster, for goodness sake!",
-                    "",
-                    "Asphalt heartbeat, syncs with mine",
-                    "Crossing every single line!",
-                    "Engine screams the name of night:",
-                    "يا ليل! (Ya Layl!)",
-                    "Burning through the neon light:",
-                    "يا ليل! (Ya Layl!)",
-                    "",
-                    "Steel frame shakes",
-                    "No mistakes",
-                    "Pulse is high",
-                    "Watch me fly",
-                    "Ghosts behind",
-                    "Lose my mind",
-                    "Can't rewind",
-                    "Leave them blind.",
-                    "",
-                    "The beat gets louder, feel the ground shake",
-                    "Push it faster, for goodness sake!",
-                    "",
-                    "Asphalt heartbeat, syncs with mine",
-                    "Crossing every single line!",
-                    "Engine screams the name of night:",
-                    "يا ليل! (Ya Layl!)",
-                    "Burning through the neon light:",
-                    "يا ليل! (Ya Layl!)",
-                    "",
-                    "Just the sound...",
-                    "Spinning 'round...",
-                    "Lost and found...",
-                    "",
-                    "Asphalt heartbeat, syncs with mine",
-                    "Crossing every single line!",
-                    "Engine screams the name of night:",
-                    "يا ليل! (Ya Layl!)",
-                    "Burning through the neon light:",
-                    "يا ليل! (Ya Layl!)"
-                ]
+            {
+                title: "Night Rhythm",
+                artist: "Retro Waves",
+                src: "https://audio.jukehost.co.uk/g1mnUVIICxoL3IQgWT1D1eBE3PebQz2z"
             },
-            { 
-                id: 2, 
-                name: "Gönül Yarası", 
-                url: "https://audio.jukehost.co.uk/w6ljByylsvFth6LBE48dCCqdd0Ki9mUH", 
-                duration: "8:28",
-                lyrics: [
-                    "Güzelim, çıktı başımdan duman",
-                    "Bu aşkın elemi bitsin artık yaman",
-                    "",
-                    "Yaktın beni aman, o bakışınla yar",
-                    "Bu hasretlik ömre bedel, gel olmasın ayrılık",
-                    "Sensiz geçmiyor hiç bir an, canan",
-                    "Bu hasretlik ömre bedel, gel olmasın ayrılık",
-                    "",
-                    "Her gece sensizlik oldu bana dert",
-                    "Gel hadi çare ol, bitsin bu kara sert",
-                    "",
-                    "Yaktın beni aman, o bakışınla yar",
-                    "Bu hasretlik ömre bedel, gel olmasın ayrılık",
-                    "Sensiz geçmiyor hiç bir an, canan",
-                    "Bu hasretlik ömre bedel, gel olmasın ayrılık",
-                    "",
-                    "Gel olmasın ayrılık...",
-                    "Canan..."
-                ]
+            {
+                title: "Summer Memories",
+                artist: "Synth Dreams",
+                src: "https://audio.jukehost.co.uk/w6ljByylsvFth6LBE48dCCqdd0Ki9mUH"
             },
-            { 
-                id: 3, 
-                name: "Good Bye Yesterday", 
-                url: "https://audio.jukehost.co.uk/aRDwAN2KfAQ3rC2SqPdxEbF3eCtsz6A5", 
-                duration: "2:49",
-                lyrics: [
-                    "Goodbye, yesterday's tears and pain,",
-                    "Washed clean by morning's gentle rain.",
-                    "Thank You, God, for this brand new start,",
-                    "Hope rising fresh within my heart.",
-                    "Sunlight chases shadows long,",
-                    "To Your mercy we belong.",
-                    "",
-                    "Oh, Today! Your freedom's sweet!",
-                    "Lift our souls with dancing feet!",
-                    "With every breath, Your love we feel,",
-                    "Grace is true, and mercy's real!",
-                    "Let the bağlama ring, the modern beat ignite,",
-                    "We dance in Your forgiving light!",
-                    "",
-                    "Golden Horn shines, troubles fade away,",
-                    "Thanking God for this blessed day.",
-                    "This rhythm divine, a joyful sound,",
-                    "In Your loving arms we're found."
-                ]
+            {
+                title: "Road to the Past",
+                artist: "Neon Drive",
+                src: "https://audio.jukehost.co.uk/aRDwAN2KfAQ3rC2SqPdxEbF3eCtsz6A5"
+            },
+            {
+                title: "Disco Dreams",
+                artist: "Electric Pulse",
+                src: "https://audio.jukehost.co.uk/rJ2qe2cxumUkdpqjXBzgIsPw5xfsWLNh"
+            },
+            {
+                title: "80s Rhythm",
+                artist: "Retro Waves",
+                src: "https://audio.jukehost.co.uk/ji9ogU5yJ3bkAatfaf4RO6FpV2YAgDQK"
+            },
+            {
+                title: "Night in the City",
+                artist: "Synth Dreams",
+                src: "https://audio.jukehost.co.uk/P4HsEtSDGNmBevczBrJLakNOt3fweydf"
             }
         ];
 
-        // Global variables
+        // Player state
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+        let isShuffled = false;
+        let isRepeating = false;
         let audioContext;
         let analyser;
         let source;
-        let audioElement;
-        let isPlaying = false;
-        let currentTrackIndex = 0;
+        let dataArray;
+        let bufferLength;
+        let canvasCtx;
         let animationId;
+        let bars = [];
 
-        // Initialize the player
+        // DOM elements
+        const audioElement = new Audio();
+        const playBtn = document.getElementById('play-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const shuffleBtn = document.getElementById('shuffle-btn');
+        const repeatBtn = document.getElementById('repeat-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.getElementById('progress-container');
+        const currentTimeEl = document.getElementById('current-time');
+        const totalTimeEl = document.getElementById('total-time');
+        const trackTitle = document.getElementById('track-title');
+        const trackArtist = document.getElementById('track-artist');
+        const playlistEl = document.getElementById('playlist');
+        const timeDateEl = document.getElementById('time-date');
+        const visualizerCanvas = document.getElementById('visualizer');
+        const audioStatusEl = document.getElementById('audio-status');
+        const volumeSlider = document.getElementById('volume-slider');
+        const visualizerBars = document.getElementById('visualizer-bars');
+
+        // Initialize player
         function initPlayer() {
-            // Create audio element
-            audioElement = new Audio();
-            audioElement.crossOrigin = "anonymous";
-            
-            // Set initial volume to 100%
-            audioElement.volume = 1.0;
-            
-            // Initialize playlist
-            renderPlaylist();
-            
-            // Set up lyrics panel
-            document.getElementById('showLyricsBtn').addEventListener('click', showLyricsPanel);
-            document.getElementById('closeLyricsBtn').addEventListener('click', hideLyricsPanel);
-            
-            // Initialize visualizer after user interaction
-            document.getElementById('playPauseBtn').addEventListener('click', initAudioContext);
-        }
-
-        // Initialize audio context after user interaction
-        function initAudioContext() {
-            if (audioContext) return;
-            
-            try {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioContext.createAnalyser();
-                analyser.fftSize = 128;
-                
-                source = audioContext.createMediaElementSource(audioElement);
-                source.connect(analyser);
-                analyser.connect(audioContext.destination);
-                
-                initVisualizer();
-            } catch (e) {
-                console.error("Web Audio API not supported", e);
-            }
-        }
-
-        // Render the playlist
-        function renderPlaylist() {
-            const playlist = document.getElementById('playlist');
-            playlist.innerHTML = '';
-            
+            // Create playlist
             tracks.forEach((track, index) => {
-                const trackItem = document.createElement('div');
-                trackItem.className = 'track-item';
+                const playlistItem = document.createElement('div');
+                playlistItem.classList.add('playlist-item');
                 if (index === currentTrackIndex) {
-                    trackItem.classList.add('active-track');
+                    playlistItem.classList.add('active');
                 }
-                
-                trackItem.innerHTML = `
-                    <div class="track-number">${track.id}</div>
-                    <div class="track-name">${track.name}</div>
-                    <div class="track-duration">${track.duration}</div>
+                playlistItem.innerHTML = `
+                    <strong>${track.title}</strong> - ${track.artist}
                 `;
-                
-                trackItem.addEventListener('click', () => {
-                    playTrack(index);
+                playlistItem.addEventListener('click', () => {
+                    playClickSound();
+                    loadTrack(index);
+                    playTrack();
                 });
+                playlistEl.appendChild(playlistItem);
+            });
+
+            // Create visualizer bars
+            for (let i = 0; i < 20; i++) {
+                const bar = document.createElement('div');
+                bar.classList.add('bar');
+                bar.style.height = '10px';
+                visualizerBars.appendChild(bar);
+                bars.push(bar);
+            }
+
+            // Load first track
+            loadTrack(currentTrackIndex);
+
+            // Update time and date
+            updateTimeDate();
+            setInterval(updateTimeDate, 1000);
+
+            // Set up event listeners
+            setupEventListeners();
+
+            // Set initial volume
+            audioElement.volume = volumeSlider.value / 100;
+        }
+
+        // Sound effects using Web Audio API
+        function playClickSound() {
+            try {
+                const clickContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = clickContext.createOscillator();
+                const gainNode = clickContext.createGain();
                 
-                playlist.appendChild(trackItem);
-            });
-        }
-
-        // Show lyrics panel
-        function showLyricsPanel() {
-            document.getElementById('lyricsPanel').style.display = 'block';
-            updateLyrics();
-        }
-
-        // Hide lyrics panel
-        function hideLyricsPanel() {
-            document.getElementById('lyricsPanel').style.display = 'none';
-        }
-
-        // Update lyrics display
-        function updateLyrics() {
-            const lyricsContent = document.getElementById('lyricsContent');
-            const currentTrack = tracks[currentTrackIndex];
-            
-            if (!currentTrack.lyrics) {
-                lyricsContent.innerHTML = '<div class="lyrics-line">No lyrics available for this track</div>';
-                return;
+                oscillator.connect(gainNode);
+                gainNode.connect(clickContext.destination);
+                
+                oscillator.frequency.setValueAtTime(800, clickContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(200, clickContext.currentTime + 0.05);
+                
+                gainNode.gain.setValueAtTime(0.3, clickContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, clickContext.currentTime + 0.05);
+                
+                oscillator.start(clickContext.currentTime);
+                oscillator.stop(clickContext.currentTime + 0.05);
+            } catch (e) {
+                console.log("Sound effect not supported");
             }
-            
-            // Clear previous lyrics
-            lyricsContent.innerHTML = '';
-            
-            // Add all lyrics lines
-            currentTrack.lyrics.forEach((line, index) => {
-                const lyricLine = document.createElement('div');
-                lyricLine.className = 'lyrics-line';
-                lyricLine.textContent = line;
-                lyricsContent.appendChild(lyricLine);
-            });
         }
 
-        // Play a specific track
-        function playTrack(index) {
+        // Load track
+        function loadTrack(index) {
             currentTrackIndex = index;
+            const track = tracks[index];
             
-            // Stop current playback
+            // Reset audio status
+            audioStatusEl.textContent = "Loading audio...";
+            
+            audioElement.src = track.src;
+            trackTitle.textContent = track.title;
+            trackArtist.textContent = track.artist;
+            
+            // Update active playlist
+            document.querySelectorAll('.playlist-item').forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // Reset progress bar
+            progressBar.style.width = '0%';
+            currentTimeEl.textContent = '0:00';
+            totalTimeEl.textContent = '0:00';
+            
+            // Set up visualizer when data is loaded
+            audioElement.addEventListener('loadeddata', () => {
+                totalTimeEl.textContent = formatTime(audioElement.duration);
+                audioStatusEl.textContent = "Ready to play";
+                
+                // Set up audio analyzer for visualizer
+                setupVisualizer();
+            });
+            
+            // Handle audio errors
+            audioElement.addEventListener('error', (e) => {
+                console.error("Error loading audio:", e);
+                audioStatusEl.textContent = "Error loading audio. Please try again.";
+            });
+        }
+
+        // Play track
+        function playTrack() {
+            // Create audio context on first user interaction (required by browsers)
+            if (!audioContext) {
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    analyser = audioContext.createAnalyser();
+                    source = audioContext.createMediaElementSource(audioElement);
+                    source.connect(analyser);
+                    analyser.connect(audioContext.destination);
+                    
+                    analyser.fftSize = 64;
+                    bufferLength = analyser.frequencyBinCount;
+                    dataArray = new Uint8Array(bufferLength);
+                } catch (e) {
+                    console.error("Audio context error:", e);
+                }
+            }
+            
+            // Try to play audio with error handling
+            const playPromise = audioElement.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    audioStatusEl.textContent = "Now Playing";
+                    
+                    // Start visualizer
+                    drawVisualizer();
+                }).catch(error => {
+                    console.error("Playback error:", error);
+                    audioStatusEl.textContent = "Click play again to start audio";
+                    
+                    // Show message for user to click play button again
+                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    isPlaying = false;
+                });
+            }
+        }
+
+        // Pause track
+        function pauseTrack() {
+            audioElement.pause();
+            isPlaying = false;
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            audioStatusEl.textContent = "Paused";
+            
+            // Stop visualizer
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            
+            // Reset visualizer bars
+            bars.forEach(bar => {
+                bar.style.height = '10px';
+            });
+        }
+
+        // Next track
+        function nextTrack() {
+            playClickSound();
+            if (isShuffled) {
+                currentTrackIndex = Math.floor(Math.random() * tracks.length);
+            } else {
+                currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+            }
+            loadTrack(currentTrackIndex);
             if (isPlaying) {
-                audioElement.pause();
-                isPlaying = false;
-            }
-            
-            // Load new track
-            audioElement.src = tracks[index].url;
-            document.getElementById('trackTitle').textContent = tracks[index].name;
-            document.getElementById('trackArtist').textContent = `TRACK ${tracks[index].id}`;
-            
-            // Reset progress
-            document.getElementById('progress').style.width = '0%';
-            document.getElementById('currentTrackTime').textContent = '0:00';
-            document.getElementById('trackDuration').textContent = tracks[index].duration;
-            
-            // Update active track in playlist
-            renderPlaylist();
-            
-            // Update lyrics if panel is open
-            if (document.getElementById('lyricsPanel').style.display === 'block') {
-                updateLyrics();
-            }
-            
-            // Play the track
-            togglePlayPause();
-        }
-
-        // Update track info when metadata is loaded
-        function updateTrackInfo() {
-            document.getElementById('trackDuration').textContent = formatTime(audioElement.duration);
-        }
-
-        // Update progress bar and time display
-        function updateProgress() {
-            const progress = document.getElementById('progress');
-            const currentTrackTime = document.getElementById('currentTrackTime');
-            
-            if (audioElement.duration) {
-                const percent = (audioElement.currentTime / audioElement.duration) * 100;
-                progress.style.width = percent + '%';
-                currentTrackTime.textContent = formatTime(audioElement.currentTime);
+                playTrack();
             }
         }
 
-        // Format time in MM:SS
+        // Previous track
+        function prevTrack() {
+            playClickSound();
+            if (isShuffled) {
+                currentTrackIndex = Math.floor(Math.random() * tracks.length);
+            } else {
+                currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+            }
+            loadTrack(currentTrackIndex);
+            if (isPlaying) {
+                playTrack();
+            }
+        }
+
+        // Toggle shuffle
+        function toggleShuffle() {
+            playClickSound();
+            isShuffled = !isShuffled;
+            shuffleBtn.style.background = isShuffled ? 'rgba(0, 150, 200, 0.4)' : 'rgba(0, 150, 200, 0.2)';
+        }
+
+        // Toggle repeat
+        function toggleRepeat() {
+            playClickSound();
+            isRepeating = !isRepeating;
+            repeatBtn.style.background = isRepeating ? 'rgba(0, 150, 200, 0.4)' : 'rgba(0, 150, 200, 0.2)';
+        }
+
+        // Update progress bar
+        function updateProgress(e) {
+            if (isPlaying) {
+                const { duration, currentTime } = e.srcElement;
+                const progressPercent = (currentTime / duration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+                currentTimeEl.textContent = formatTime(currentTime);
+            }
+        }
+
+        // Set progress bar
+        function setProgress(e) {
+            playClickSound();
+            const width = this.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audioElement.duration;
+            
+            audioElement.currentTime = (clickX / width) * duration;
+        }
+
+        // Format time
         function formatTime(seconds) {
-            if (isNaN(seconds)) return '0:00';
+            if (isNaN(seconds)) return "0:00";
             
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
-        // Handle track end
-        function handleTrackEnd() {
-            playNextTrack();
+        // Update time and date
+        function updateTimeDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            timeDateEl.textContent = now.toLocaleDateString('en-US', options);
         }
 
-        // Play next track
-        function playNextTrack() {
-            currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-            playTrack(currentTrackIndex);
-        }
-
-        // Play previous track
-        function playPrevTrack() {
-            currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-            playTrack(currentTrackIndex);
-        }
-
-        // Toggle play/pause
-        function togglePlayPause() {
-            if (!audioElement.src) {
-                // If no track is loaded, load the first one
-                playTrack(0);
-                return;
-            }
+        // Set up visualizer
+        function setupVisualizer() {
+            if (!audioContext) return;
             
-            if (isPlaying) {
-                audioElement.pause();
-                document.getElementById('playPauseBtn').textContent = '▶';
-                isPlaying = false;
-            } else {
-                // Initialize audio context if not already done
-                if (!audioContext) {
-                    initAudioContext();
-                }
+            try {
+                analyser.fftSize = 64;
+                bufferLength = analyser.frequencyBinCount;
+                dataArray = new Uint8Array(bufferLength);
                 
-                // Resume audio context if suspended
-                if (audioContext && audioContext.state === 'suspended') {
-                    audioContext.resume();
-                }
-                
-                audioElement.play().then(() => {
-                    document.getElementById('playPauseBtn').textContent = '⏸';
-                    isPlaying = true;
-                }).catch(e => {
-                    console.error("Play failed:", e);
-                    alert("Cannot play audio. Please check the browser console for details.");
-                });
+                canvasCtx = visualizerCanvas.getContext('2d');
+                visualizerCanvas.width = visualizerCanvas.offsetWidth;
+                visualizerCanvas.height = visualizerCanvas.offsetHeight;
+            } catch (e) {
+                console.error("Visualizer setup error:", e);
             }
         }
 
-        // Initialize visualizer
-        function initVisualizer() {
-            const canvas = document.getElementById('waveCanvas');
-            const ctx = canvas.getContext('2d');
+        // Draw visualizer
+        function drawVisualizer() {
+            if (!isPlaying) return;
             
-            // Set canvas dimensions
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
+            animationId = requestAnimationFrame(drawVisualizer);
             
-            // Start animation loop
-            animateVisualizer();
-        }
-
-        // Start visualizer animation
-        function startVisualizer() {
-            if (animationId) {
-                cancelAnimationFrame(animationId);
+            if (!analyser) return;
+            
+            analyser.getByteFrequencyData(dataArray);
+            
+            // Update bar visualizer
+            for (let i = 0; i < bars.length; i++) {
+                const value = dataArray[i % bufferLength] / 255;
+                const height = 10 + value * 30;
+                bars[i].style.height = `${height}px`;
+                bars[i].style.background = `rgba(0, 229, 255, ${0.4 + value * 0.6})`;
             }
-            animateVisualizer();
-        }
-
-        // Minimal Visualizer - Simple Waveform
-        function animateVisualizer() {
-            const canvas = document.getElementById('waveCanvas');
-            const ctx = canvas.getContext('2d');
             
-            // Clear canvas
-            ctx.fillStyle = 'rgba(15, 15, 30, 0.1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            if (isPlaying && analyser) {
-                // Get frequency data
-                const bufferLength = analyser.frequencyBinCount;
-                const dataArray = new Uint8Array(bufferLength);
-                analyser.getByteFrequencyData(dataArray);
+            // Update circular visualizer
+            if (canvasCtx) {
+                canvasCtx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
                 
-                // Draw minimal waveform
-                const centerY = canvas.height / 2;
-                const sliceWidth = canvas.width / bufferLength;
+                const centerX = visualizerCanvas.width / 2;
+                const centerY = visualizerCanvas.height / 2;
+                const radius = Math.min(centerX, centerY) * 0.8;
                 
-                // Primary wave
-                ctx.strokeStyle = '#4a6bff';
-                ctx.lineWidth = 1.5;
-                ctx.beginPath();
-                
-                let x = 0;
                 for (let i = 0; i < bufferLength; i++) {
-                    const v = dataArray[i] / 128.0;
-                    const y = centerY + (v * centerY / 3);
+                    const amplitude = dataArray[i] / 255;
+                    const angle = (i / bufferLength) * 2 * Math.PI;
+                    const barLength = amplitude * radius * 0.5;
                     
-                    if (i === 0) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
-                    }
+                    const x1 = centerX + Math.cos(angle) * radius;
+                    const y1 = centerY + Math.sin(angle) * radius;
+                    const x2 = centerX + Math.cos(angle) * (radius + barLength);
+                    const y2 = centerY + Math.sin(angle) * (radius + barLength);
                     
-                    x += sliceWidth;
-                }
-                ctx.stroke();
-                
-                // Draw frequency bars (minimal)
-                const barWidth = (canvas.width / bufferLength) * 2;
-                let barX = 0;
-                
-                for (let i = 0; i < bufferLength; i+=3) {
-                    const barHeight = dataArray[i] / 4;
-                    
-                    ctx.fillStyle = '#4a6bff';
-                    ctx.fillRect(barX, canvas.height - barHeight, barWidth, barHeight);
-                    
-                    barX += barWidth + 1;
+                    canvasCtx.beginPath();
+                    canvasCtx.moveTo(x1, y1);
+                    canvasCtx.lineTo(x2, y2);
+                    canvasCtx.strokeStyle = `rgba(0, 229, 255, ${0.5 + amplitude * 0.5})`;
+                    canvasCtx.lineWidth = 2;
+                    canvasCtx.stroke();
                 }
             }
-            
-            animationId = requestAnimationFrame(animateVisualizer);
         }
 
         // Set up event listeners
-        document.getElementById('playPauseBtn').addEventListener('click', togglePlayPause);
-        document.getElementById('prevBtn').addEventListener('click', playPrevTrack);
-        document.getElementById('nextBtn').addEventListener('click', playNextTrack);
-
-        // Set up audio element event listeners
-        function setupAudioEvents() {
-            audioElement.addEventListener('loadedmetadata', updateTrackInfo);
+        function setupEventListeners() {
+            // Button events
+            playBtn.addEventListener('click', () => {
+                playClickSound();
+                if (isPlaying) {
+                    pauseTrack();
+                } else {
+                    playTrack();
+                }
+            });
+            
+            nextBtn.addEventListener('click', nextTrack);
+            prevBtn.addEventListener('click', prevTrack);
+            shuffleBtn.addEventListener('click', toggleShuffle);
+            repeatBtn.addEventListener('click', toggleRepeat);
+            
+            // Audio events
             audioElement.addEventListener('timeupdate', updateProgress);
-            audioElement.addEventListener('ended', handleTrackEnd);
+            audioElement.addEventListener('ended', () => {
+                if (isRepeating) {
+                    audioElement.currentTime = 0;
+                    playTrack();
+                } else {
+                    nextTrack();
+                }
+            });
+            
+            // Progress bar event
+            progressContainer.addEventListener('click', setProgress);
+            
+            // Volume slider event
+            volumeSlider.addEventListener('input', () => {
+                audioElement.volume = volumeSlider.value / 100;
+            });
+
+            // Enable audio on first page click (for browser requirements)
+            document.addEventListener('click', function initAudio() {
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+            });
         }
 
-        // Initialize on load
-        window.addEventListener('load', function() {
-            initPlayer();
-            setupAudioEvents();
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            const canvas = document.getElementById('waveCanvas');
-            if (canvas) {
-                canvas.width = canvas.offsetWidth;
-                canvas.height = canvas.offsetHeight;
-            }
-        });
+        // Start player when page loads
+        window.addEventListener('load', initPlayer);
     </script>
 </body>
 </html>
